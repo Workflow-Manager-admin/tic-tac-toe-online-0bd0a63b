@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import SnakeGame from "./SnakeGame";
 
 // Color palette
 const COLORS = {
@@ -122,6 +123,7 @@ function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [gameMode, setGameMode] = useState("PvC"); // 'PvP' or 'PvC'
   const [autoAction, setAutoAction] = useState(false);
+  const [showSnake, setShowSnake] = useState(false);
 
   const currentBoard = history[step];
   const winnerObj = calculateWinner(currentBoard);
@@ -228,22 +230,32 @@ function App() {
           <button
             className="ttt-btn"
             style={{
-              background: gameMode === "PvC" ? COLORS.primary : COLORS.secondary,
+              background: !showSnake && gameMode === "PvC" ? COLORS.primary : COLORS.secondary,
               color: "#fff"
             }}
-            aria-pressed={gameMode === "PvC"}
-            onClick={() => startNewGame("PvC")}
+            aria-pressed={!showSnake && gameMode === "PvC"}
+            onClick={() => { setShowSnake(false); startNewGame("PvC"); }}
           >Vs Computer</button>
           <button
             className="ttt-btn"
             style={{
-              background: gameMode === "PvP" ? COLORS.primary : COLORS.secondary,
+              background: !showSnake && gameMode === "PvP" ? COLORS.primary : COLORS.secondary,
               color: "#fff",
               marginLeft: 8
             }}
-            aria-pressed={gameMode === "PvP"}
-            onClick={() => startNewGame("PvP")}
+            aria-pressed={!showSnake && gameMode === "PvP"}
+            onClick={() => { setShowSnake(false); startNewGame("PvP"); }}
           >Vs Player</button>
+          <button
+            className="ttt-btn"
+            style={{
+              background: showSnake ? COLORS.accent : COLORS.secondary,
+              color: "#fff",
+              marginLeft: 8
+            }}
+            aria-pressed={showSnake}
+            onClick={() => setShowSnake(true)}
+          >Snake</button>
           <button className="ttt-btn" onClick={toggleTheme} style={{
             background: "transparent", color: COLORS.text, border: `1px solid ${COLORS.border}`, marginLeft: 8
           }}>
@@ -252,32 +264,37 @@ function App() {
         </div>
       </header>
       <main style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "0 auto" }}>
-
-        <div className="ttt-board-container">
-          <div className="ttt-status">{status}</div>
-          <Board squares={currentBoard} onSquareClick={handleMove} winnerLine={winnerObj && winnerObj.line} />
-        </div>
-        <div className="ttt-controls">
-          <button className="ttt-btn ttt-btn-tertiary" disabled={step <= 0} onClick={undoMove}>Undo</button>
-          <button className="ttt-btn ttt-btn-tertiary" disabled={step >= history.length - 1} onClick={redoMove}>Redo</button>
-          <button className="ttt-btn ttt-btn-tertiary" style={{ marginLeft: 8 }} onClick={() => startNewGame(gameMode)}>Restart</button>
-        </div>
-        <div className="ttt-history">
-          <span className="ttt-history-label">Move History:</span>
-          {[...Array(history.length)].map((_, i) => (
-            <button
-              key={i}
-              className="ttt-btn ttt-history-btn"
-              onClick={() => jumpTo(i)}
-              style={{
-                fontWeight: i === step ? 700 : 400,
-                color: i === step ? COLORS.accent : COLORS.secondary,
-                textDecoration: i === step ? "underline" : undefined
-              }}
-              aria-current={i === step ? "step" : undefined}
-            >{i === 0 ? "Start" : i}</button>
-          ))}
-        </div>
+        {showSnake ? (
+          <SnakeGame onBack={() => setShowSnake(false)} />
+        ) : (
+        <>
+          <div className="ttt-board-container">
+            <div className="ttt-status">{status}</div>
+            <Board squares={currentBoard} onSquareClick={handleMove} winnerLine={winnerObj && winnerObj.line} />
+          </div>
+          <div className="ttt-controls">
+            <button className="ttt-btn ttt-btn-tertiary" disabled={step <= 0} onClick={undoMove}>Undo</button>
+            <button className="ttt-btn ttt-btn-tertiary" disabled={step >= history.length - 1} onClick={redoMove}>Redo</button>
+            <button className="ttt-btn ttt-btn-tertiary" style={{ marginLeft: 8 }} onClick={() => startNewGame(gameMode)}>Restart</button>
+          </div>
+          <div className="ttt-history">
+            <span className="ttt-history-label">Move History:</span>
+            {[...Array(history.length)].map((_, i) => (
+              <button
+                key={i}
+                className="ttt-btn ttt-history-btn"
+                onClick={() => jumpTo(i)}
+                style={{
+                  fontWeight: i === step ? 700 : 400,
+                  color: i === step ? COLORS.accent : COLORS.secondary,
+                  textDecoration: i === step ? "underline" : undefined
+                }}
+                aria-current={i === step ? "step" : undefined}
+              >{i === 0 ? "Start" : i}</button>
+            ))}
+          </div>
+        </>
+        )}
       </main>
       <footer className="ttt-footer" style={{ marginTop: 40, fontSize: 14, color: COLORS.secondary, opacity: 0.7 }}>
         <span>
