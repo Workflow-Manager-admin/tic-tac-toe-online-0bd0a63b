@@ -1,104 +1,225 @@
 /* CSS Variables for Theme Management */
 :root {
-  /* Light theme colors */
+  --color-primary: #2196F3;
+  --color-secondary: #1976D2;
+  --color-accent: #FF9800;
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
+  --text-primary: #23272f;
+  --text-secondary: #868e96;
   --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  --ttt-board-bg: #fff;
+  --ttt-cell-hover: #f0f4fc;
+  --ttt-winner-bg: #FFF8E1;
+  --button-bg: #2196F3;
+  --button-bg-alt: #1976D2;
+  --button-accent: #FF9800;
+  --button-text: #fff;
 }
 
 [data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
+  --color-primary: #1976D2;
+  --color-secondary: #0d2148;
+  --bg-primary: #12181e;
+  --bg-secondary: #23272f;
+  --text-primary: #f8faff;
   --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+  --border-color: #40454b;
+  --ttt-board-bg: #1e232a;
+  --ttt-cell-hover: #283141;
+  --button-bg: #1976D2;
+  --button-bg-alt: #2196F3;
+  --button-text: #fff;
 }
 
 .App {
   text-align: center;
-  background-color: var(--bg-primary);
+  background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s, color 0.3s;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ttt-header {
+  padding: 40px 0 0 0;
+  background: transparent;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ttt-title {
+  font-size: 2.6rem;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  font-weight: 900;
+  color: var(--color-primary);
 }
 
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
+.ttt-menu {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
+  align-items: center;
+  margin-bottom: 32px;
+  gap: 8px;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
+.ttt-btn {
+  min-width: 120px;
+  margin: 0 2px;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
+  background: var(--button-bg);
+  color: var(--button-text);
+  padding: 10px 18px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 5px #00000012;
+  outline: none;
+}
+.ttt-btn[aria-pressed="true"] {
+  background: var(--button-accent);
+  color: #fff;
+}
+.ttt-btn:active {
+  background: var(--button-bg-alt);
+}
+.ttt-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.ttt-btn-tertiary {
+  background: #fff;
+  color: var(--color-secondary);
+  border: 1px solid var(--color-secondary);
+  font-weight: 500;
+  margin: 0 2px;
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+.ttt-board-container {
+  margin: 0 auto 22px;
+  padding: 16px 0 6px 0;
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+.ttt-status {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  font-weight: 500;
+  color: var(--color-primary);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.ttt-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--ttt-board-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 20px 0 #e9ecef42;
+  margin: 0 auto;
+  padding: 0.5rem;
+  width: 294px;
+}
+
+.ttt-board-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.ttt-square {
+  background: #fff;
+  border: 2.5px solid var(--border-color);
+  width: 90px;
+  height: 90px;
+  font-size: 2.9rem;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 0.22rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: border-color 0.17s, background 0.15s;
+  box-sizing: border-box;
+}
+
+.ttt-square:focus, .ttt-square:hover {
+  border-color: var(--color-accent);
+  background: var(--ttt-cell-hover);
+}
+.ttt-square[aria-current="step"] {
+  font-weight: 900;
+  color: var(--color-accent);
+}
+
+.ttt-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+}
+.ttt-controls .ttt-btn {
+  min-width: 72px;
+  font-size: 1rem;
+  padding: 8px 9px;
+}
+
+.ttt-history {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 16px auto 0 auto;
+  justify-content: center;
+  max-width: 380px;
+  font-size: 0.97rem;
+}
+
+.ttt-history-label {
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  margin-right: 7px;
+}
+
+.ttt-history-btn.ttt-btn {
+  background: #fff !important;
+  color: var(--color-accent) !important;
+  margin: 2px;
+  min-width: 32px;
+  padding: 4px 0;
+  font-size: 0.92rem;
+  border: 1px solid #ff98007d;
+  border-radius: 8px;
+}
+
+.ttt-history-btn[aria-current="step"] {
+  background: var(--button-accent) !important;
+  color: #fff !important;
+}
+
+.ttt-footer {
+  margin-top: 40px;
+  padding: 16px 0 12px 0;
+  color: var(--text-secondary);
+  text-shadow: none;
+  text-align: center;
+  font-size: 13.5px;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 600px) {
+  .ttt-board, .ttt-board-row {
+    width: 99vw !important;
+    min-width: 0;
   }
-  to {
-    transform: rotate(360deg);
+  .ttt-board {
+    width: 99vw !important;
+    max-width: 99vw;
   }
-}
-
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+  .ttt-square {
+    width: 30vw !important;
+    height: 30vw !important;
+    font-size: 8vw !important;
   }
 }
